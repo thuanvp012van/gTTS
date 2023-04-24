@@ -26,10 +26,5 @@
         "files": [
             "./consts.php"
         ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Thuanvp012van\\GTTS\\Tests\\": "tests"
-        }
     }
 }
