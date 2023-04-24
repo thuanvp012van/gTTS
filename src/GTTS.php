@@ -192,6 +192,11 @@ class GTTS
         }
     }
 
+    /**
+     * Set uri.
+     * 
+     * @return void
+     */
     protected function setUri(): void
     {
         $this->uri = "https://translate.google.{$this->getTopLevelDomain()}/_/TranslateWebserverUi/data/batchexecute";
