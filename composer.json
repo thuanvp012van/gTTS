@@ -1,5 +1,35 @@
 {
+    "name": "thuanvp012van/gtts",
+    "description": "Google Text-to-Speech with php",
+    "type": "library",
+    "keywords": [
+        "php",
+        "google",
+        "text to speech"
+    ],
+    "authors": [
+        {
+            "name": "Nguyễn Hoàng Thắng Thuận",
+            "email": "thuanvp012van@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
     "require": {
-        "guzzlehttp/guzzle": "^7.5"
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": ">=7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Thuanvp012van\\GTTS\\": "src"
+        },
+        "files": [
+            "./consts.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Thuanvp012van\\GTTS\\Tests\\": "tests"
+        }
     }
 }
