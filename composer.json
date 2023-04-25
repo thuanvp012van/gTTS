@@ -29,5 +29,5 @@
             "./consts.php"
         ]
     },
-    "bin": ["bin/gtts.php"]
+    "bin": ["bin/gtts"]
 }
