@@ -1,7 +1,22 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/..'.'/autoload.php';
+$dir = __DIR__.'/..';
+
+if (!file_exists($dir.'/autoload.php')) {
+    $dir = __DIR__.'/../vendor';
+}
+
+if (!file_exists($dir.'/autoload.php')) {
+    $dir = __DIR__.'/../../..';
+}
+
+if (!file_exists($dir.'/autoload.php')) {
+    echo 'Autoload not found.';
+    die;
+}
+
+require $dir.'/autoload.php';
 
 use Symfony\Component\Console\Application;
 use Thuanvp012van\GTTS\Commands\ListLanguagesCommand;
