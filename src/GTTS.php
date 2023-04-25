@@ -19,7 +19,7 @@ class GTTS
 
     protected int $maxLengthInOneRequest = 100;
 
-    protected string $lang;
+    protected Language $lang;
 
     public function __construct(
         protected string|null $text = null,
@@ -61,16 +61,16 @@ class GTTS
      */
     public function lang(Language $lang): static
     {
-        $this->lang = strtolower($lang->name);
+        $this->lang = $lang;
         return $this;
     }
 
     /**
      * Get language.
      * 
-     * @return string
+     * @return \Thuanvp012van\GTTS\Language
      */
-    public function getLang(): string
+    public function getLang(): Language
     {
         return $this->lang;
     }
@@ -171,8 +171,9 @@ class GTTS
             $textParts = mb_split("[\?\!\？\！\.\,\¡\(\)\[\]\¿\…\‥\،\;\:\—\。\，\、\：\n]+", $this->text);
         }
 
+        $lang = $this->lang->getName();
         foreach ($textParts as $part) {
-            $parameter = [$part, $this->lang, $this->speed, "null"];
+            $parameter = [$part, $lang, $this->speed, "null"];
             $escapedParameter = json_encode($parameter);
             $rpc = [[["jQ1olc", $escapedParameter, null, "generic"]]];
             $espacedRpc = json_encode($rpc);

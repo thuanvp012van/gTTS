@@ -1,6 +1,6 @@
 {
     "name": "thuanvp012van/gtts",
-    "description": "Google Text-to-Speech with php",
+    "description": "Google Text-to-Speech for php",
     "type": "library",
     "keywords": [
         "php",
@@ -18,7 +18,8 @@
     "require": {
         "php": ">=8.0",
         "ext-mbstring": "*",
-        "guzzlehttp/guzzle": ">=7.5"
+        "guzzlehttp/guzzle": ">=7.5",
+        "symfony/console": ">=6.1"
     },
     "autoload": {
         "psr-4": {
@@ -27,5 +28,6 @@
         "files": [
             "./consts.php"
         ]
-    }
+    },
+    "bin": ["bin/gtts.php"]
 }

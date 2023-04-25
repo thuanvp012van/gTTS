@@ -2,6 +2,8 @@
 
 namespace Thuanvp012van\GTTS;
 
+use ReflectionEnum;
+
 enum Language: string
 {
     case AF = "Afrikaans";
@@ -63,4 +65,18 @@ enum Language: string
     case ZHCN = "Chinese (Simplified)";
     case ZHTW = "Chinese (Traditional)";
     case ZH = "Chinese (Mandarin)";
+
+    public function getName(): string
+    {
+        if ($this->name !== 'ZH' && str_contains($this->name, 'ZH')) {
+            return str_replace('ZH', 'zh-', $this->name);
+        }
+        return strtolower($this->name);
+    }
+
+    public static function getCaseByKey(string $key): static
+    {
+        $key = strtoupper(str_replace('-', '', $key));
+        return (new ReflectionEnum(Language::class))->getCase($key)->getValue();
+    }
 }

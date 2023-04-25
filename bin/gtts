@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/..'.'/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Thuanvp012van\GTTS\Commands\ListLanguagesCommand;
+use Thuanvp012van\GTTS\Commands\SaveFleCommand;
+
+$application = new Application('GTTS Commands.', '1.1.0');
+$application->add(new ListLanguagesCommand());
+$application->add(new SaveFleCommand());
+$application->run();
