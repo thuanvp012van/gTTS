@@ -168,7 +168,10 @@ class GTTS
         $textParts = (array)$this->text;
 
         if (strlen($this->text) > $this->maxLengthInOneRequest) {
-            $textParts = mb_split("[\?\!\？\！\.\,\¡\(\)\[\]\¿\…\‥\،\;\:\—\。\，\、\：\n]+", $this->text);
+            $pattern = "/.{0,99}[\?\!\？\！\.\,\¡\(\)\[\]\¿\…\‥\،\;\:\—\。\，\、\：\n]/";
+            if (preg_match_all($pattern, $this->text, $matches)) {
+                $textParts = array_filter(array_map('trim', $matches[0]), fn($buffer) => !empty($buffer));
+            }
         }
 
         $lang = $this->lang->getName();
@@ -187,8 +190,8 @@ class GTTS
                 ]
             );
             $body = $response->getBody();
-            if (preg_match('/jQ1olc\"\,"\[\\\\"(.*)\\\\"\]/', $body, $matches)) {
-                yield base64_decode($matches[1]);
+            if (preg_match('/jQ1olc\"\,"\[\\\\"(.*)\\\\"\]/', $body, $buffer)) {
+                yield base64_decode($buffer[1]);
             }
         }
     }
