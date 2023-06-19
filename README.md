@@ -10,7 +10,7 @@ composer require thuanvp012van/gtts
 
     require './vendor/autoload.php';
 
-    $gtts = new GTTS('Xin chào mọi người', Language::VI); // or $gtts = (new GTTS('Xin chào mọi người'))->autoDetection();
+    $gtts = new GTTS('Xin chào mọi người', Language::VI); // or $gtts = (new GTTS('Xin chào mọi người'))->autoDetection(true);
     $gtts->save('helloworld.mp3');
     ```
 
@@ -31,7 +31,8 @@ composer require thuanvp012van/gtts
 * `getText()`: Get text.
 * `lang(\Thuanvp012van\GTTS\Language $lang)`: Set language.
 * `getLang()`: Get language.
-* `autoDetection()`: Automatic language detection.
+* `autoDetection(bool $autoDetection)`: Set auto detection.
+* `isAutoDetection()`: Check is auto detection..
 * `setLevelDomain()`: Set top level domain.
 * `getLevelDomain()`: Get top level domain.
 * `slowSpeed()`: Set slow reading speed.
