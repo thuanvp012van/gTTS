@@ -10,14 +10,20 @@ composer require thuanvp012van/gtts
 
     require './vendor/autoload.php';
 
-    $gtts = new GTTS('Xin chào mọi người', Language::VI);
+    $gtts = new GTTS('Xin chào mọi người', Language::VI); // or $gtts = (new GTTS('Xin chào mọi người'))->autoDetection();
     $gtts->save('helloworld.mp3');
     ```
 
 2. Use with command-line
     ```bash
-    php ./vendor/bin/gtts --languages # Show all languages
-    php ./vendor/bin/gtts save --file=helloworld.mp3 --language=vi 'Xin chào mọi người' # Convert text to speech
+    php ./vendor/bin/gtts languages # Show all languages
+    ```
+    ```bash
+    php ./vendor/bin/gtts save --file=helloworld.mp3 --language=vi 'Xin chào mọi người' # Convert text to speech.
+    ```
+    OR
+    ```bash
+    php ./vendor/bin/gtts save --file=helloworld.mp3 --auto-detection 'Xin chào mọi người' # Automatic language detection.
     ```
 
 ### Methods
@@ -25,6 +31,7 @@ composer require thuanvp012van/gtts
 * `getText()`: Get text.
 * `lang(\Thuanvp012van\GTTS\Language $lang)`: Set language.
 * `getLang()`: Get language.
+* `autoDetection()`: Automatic language detection.
 * `setLevelDomain()`: Set top level domain.
 * `getLevelDomain()`: Get top level domain.
 * `slowSpeed()`: Set slow reading speed.

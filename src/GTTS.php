@@ -2,8 +2,10 @@
 
 namespace Thuanvp012van\GTTS;
 
-use Generator;
+use Thuanvp012van\GTTS\Exceptions\LanguageNotDetectedException;
+use Thuanvp012van\GTTS\Exceptions\NoAudioException;
 use Thuanvp012van\GTTS\Language;
+use Generator;
 
 class GTTS
 {
@@ -73,6 +75,55 @@ class GTTS
     public function getLang(): Language
     {
         return $this->lang;
+    }
+
+    /**
+     * Automatic language detection.
+     * 
+     * @return \Thuanvp012van\GTTS\Language
+     */
+    public function autoDetection(): static
+    {
+        $english = Language::EN;
+        $parameter = [[$this->getText(), 'auto', $english->getName(), 1], [null]];
+        $escapedParameter = json_encode($parameter);
+        $rpc = [[["MkEWBc", $escapedParameter, null, "generic"]]];
+        $espacedRpc = json_encode($rpc);
+        $paramUrl = 'f.req=' . urlencode($espacedRpc) . '&';
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request(
+            'POST',
+            "{$this->uri}?$paramUrl",
+            [
+                'headers' => $this->headers
+            ]
+        );
+
+        $statusCode = $response->getStatusCode();
+        if ($statusCode >= 400) {
+            throw new HttpException($response->getReasonPhrase(), $statusCode);
+        }
+
+        $langCodes = array_map(fn ($lang) => $lang->getName(), Language::cases());
+        $langs = join('|', $langCodes);
+        if (preg_match('/null\,\\\"(' . $langs . ')\\\"/', $response->getBody(), $matches)) {
+            $currentLang = $matches[1];
+            $find = false;
+            foreach ($langCodes as $lang) {
+                if ($currentLang === $lang) {
+                    $this->lang(Language::getCaseByKey($currentLang));
+                    $find = true;
+                }
+            }
+
+            if (!$find) {
+                throw new LanguageNotDetectedException;
+            }
+
+            return $this;
+        }
+
+        throw new LanguageNotDetectedException;
     }
 
     /**
@@ -168,17 +219,17 @@ class GTTS
         $textParts = (array)$this->text;
 
         if (strlen($this->text) > $this->maxLengthInOneRequest) {
-            $pattern = "/.{0,99}[\?\!\？\！\.\,\¡\(\)\[\]\¿\…\‥\،\;\:\—\。\，\、\：\n]/";
+            $pattern = '/.{0,99}[\?\!\？\！\.\,\¡\(\)\[\]\¿\…\‥\،\;\:\—\。\，\、\：\n]/';
             if (preg_match_all($pattern, $this->text, $matches)) {
-                $textParts = array_filter(array_map('trim', $matches[0]), fn($buffer) => !empty($buffer));
+                $textParts = array_filter(array_map('trim', $matches[0]), fn ($buffer) => !empty($buffer));
             }
         }
 
         $lang = $this->lang->getName();
         foreach ($textParts as $part) {
-            $parameter = [$part, $lang, $this->speed, "null"];
+            $parameter = [$part, $lang, $this->speed, 'null'];
             $escapedParameter = json_encode($parameter);
-            $rpc = [[["jQ1olc", $escapedParameter, null, "generic"]]];
+            $rpc = [[['jQ1olc', $escapedParameter, null, 'generic']]];
             $espacedRpc = json_encode($rpc);
             $paramUrl = 'f.req=' . urlencode($espacedRpc) . '&';
             $client = new \GuzzleHttp\Client();
@@ -189,9 +240,17 @@ class GTTS
                     'headers' => $this->headers
                 ]
             );
+
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 400) {
+                throw new HttpException($response->getReasonPhrase(), $statusCode);
+            }
+
             $body = $response->getBody();
             if (preg_match('/jQ1olc\"\,"\[\\\\"(.*)\\\\"\]/', $body, $buffer)) {
                 yield base64_decode($buffer[1]);
+            } else {
+                throw new NoAudioException;
             }
         }
     }
