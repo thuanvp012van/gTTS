@@ -6,6 +6,7 @@ use Thuanvp012van\GTTS\Exceptions\LanguageNotDetectedException;
 use Thuanvp012van\GTTS\Exceptions\NoAudioException;
 use Thuanvp012van\GTTS\Language;
 use Generator;
+use Thuanvp012van\GTTS\Exceptions\HttpException;
 
 class GTTS
 {
@@ -22,6 +23,8 @@ class GTTS
     protected int $maxLengthInOneRequest = 100;
 
     protected Language $lang;
+
+    protected bool $autoDetection = false;
 
     public function __construct(
         protected string|null $text = null,
@@ -78,11 +81,33 @@ class GTTS
     }
 
     /**
-     * Automatic language detection.
+     * Set auto detection.
+     * 
+     * @param bool $autoDetection
+     * @return $this
+     */
+    public function autoDetection(bool $autoDetection): static
+    {
+        $this->autoDetection = $autoDetection;
+        return $this;
+    }
+
+    /**
+     * Is auto detection.
+     * 
+     * @return bool
+     */
+    public function isAutoDetection(): bool
+    {
+        return $this->autoDetection;
+    }
+
+    /**
+     * Hand automatic language detection.
      * 
      * @return \Thuanvp012van\GTTS\Language
      */
-    public function autoDetection(): static
+    protected function hanldAutoDetection(): static
     {
         $english = Language::EN;
         $parameter = [[$this->getText(), 'auto', $english->getName(), 1], [null]];
@@ -106,7 +131,7 @@ class GTTS
 
         $langCodes = array_map(fn ($lang) => $lang->getName(), Language::cases());
         $langs = join('|', $langCodes);
-        if (preg_match('/null\,\\\"(' . $langs . ')\\\"/', $response->getBody(), $matches)) {
+        if (preg_match('/\\\"(' . $langs . ')\\\"/', $response->getBody(), $matches)) {
             $currentLang = $matches[1];
             $find = false;
             foreach ($langCodes as $lang) {
@@ -216,6 +241,9 @@ class GTTS
      */
     public function stream(): Generator
     {
+        if ($this->isAutoDetection()) {
+            $this->hanldAutoDetection();
+        }
         $textParts = (array)$this->text;
 
         if (strlen($this->text) > $this->maxLengthInOneRequest) {

@@ -21,6 +21,13 @@ class SaveFleCommand extends Command
     {
         $this->addOption('file', 'f', InputOption::VALUE_REQUIRED, 'File path');
         $this->addOption('language', 'l', InputOption::VALUE_REQUIRED, 'Language', Language::EN->getName());
+        $this->addOption(
+            'auto-detection',
+            null,
+            InputOption::VALUE_NEGATABLE,
+            'Automatic language detection',
+            false
+        );
         $this->addOption('tld', null, InputOption::VALUE_REQUIRED, 'Top level domain', 'com');
         $this->addOption('slow', null, InputOption::VALUE_NONE, 'Slow reading speed');
         $this->addArgument('text', InputArgument::REQUIRED, 'Text to audio');
@@ -34,6 +41,7 @@ class SaveFleCommand extends Command
             $input->getOption('slow'),
             $input->getOption('tld')
         );
+        $gtts->autoDetection($input->getOption('auto-detection'));
         $file = $input->getOption('file');
         $file = is_dir(dirname($file)) ? $file : getcwd() . '/' . $file;
         $gtts->save($file);
