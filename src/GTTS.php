@@ -103,11 +103,11 @@ class GTTS
     }
 
     /**
-     * Hand automatic language detection.
+     * Automatic language detection handling.
      * 
      * @return \Thuanvp012van\GTTS\Language
      */
-    protected function hanldAutoDetection(): static
+    protected function handleAutoDetection(): static
     {
         $english = Language::EN;
         $parameter = [[$this->getText(), 'auto', $english->getName(), 1], [null]];
@@ -157,7 +157,7 @@ class GTTS
      * @param string $tld
      * @return $this
      */
-    public function setTopLevelDomain(string $tld): static
+    public function topLevelDomain(string $tld): static
     {
         $this->tld = $tld;
         $this->setUri();
@@ -242,7 +242,7 @@ class GTTS
     public function stream(): Generator
     {
         if ($this->isAutoDetection()) {
-            $this->hanldAutoDetection();
+            $this->handleAutoDetection();
         }
         $textParts = (array)$this->text;
 

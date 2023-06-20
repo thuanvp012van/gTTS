@@ -32,8 +32,8 @@ composer require thuanvp012van/gtts
 * `lang(\Thuanvp012van\GTTS\Language $lang)`: Set language.
 * `getLang()`: Get language.
 * `autoDetection(bool $autoDetection)`: Set auto detection.
-* `isAutoDetection()`: Check is auto detection..
-* `setLevelDomain()`: Set top level domain.
+* `isAutoDetection()`: Check is auto detection.
+* `topLevelDomain(string $tld)`: Set top level domain.
 * `getLevelDomain()`: Get top level domain.
 * `slowSpeed()`: Set slow reading speed.
 * `normalSpeed()`: Set normal reading speed.
